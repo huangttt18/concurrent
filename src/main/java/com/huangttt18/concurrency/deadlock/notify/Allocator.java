@@ -1,4 +1,4 @@
-package com.huangttt18.concurrency.deadlock;
+package com.huangttt18.concurrency.deadlock.notify;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,17 +25,18 @@ public class Allocator {
 
     /**
      * 一次申请所有的资源
-     *
-     * @return 申请是否成功
      */
-    public synchronized boolean apply(Object from, Object to) {
-        if (als.contains(from) || als.contains(to)) {
+    public synchronized void apply(Object from, Object to) {
+        while (als.contains(from) || als.contains(to)) {
             // 如果管理员只持有一个资源，则申请失败
-            return false;
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         als.add(from);
         als.add(to);
-        return true;
     }
 
     /**
@@ -44,6 +45,7 @@ public class Allocator {
     public synchronized void free(Object from, Object to) {
         als.remove(from);
         als.remove(to);
+        notifyAll();
     }
 
     private static class SingletonGenerator {

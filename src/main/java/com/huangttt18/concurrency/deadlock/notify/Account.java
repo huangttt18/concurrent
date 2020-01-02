@@ -1,4 +1,4 @@
-package com.huangttt18.concurrency.deadlock;
+package com.huangttt18.concurrency.deadlock.notify;
 
 /**
  * 死锁发生的条件
@@ -20,9 +20,7 @@ public class Account {
 
     public void transfer(Account target, int amount) {
         // 首先申请两个账户锁（共享资源）
-        while (!(allocator.apply(this, target))) {
-            System.out.println("申请资源失败");
-        }
+        allocator.apply(this, target);
 
         try {
             // 锁定from
