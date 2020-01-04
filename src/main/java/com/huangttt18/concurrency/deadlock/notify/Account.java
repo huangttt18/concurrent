@@ -35,6 +35,7 @@ public class Account {
             }
         } finally {
             // 释放资源
+
             allocator.free(this, target);
         }
     }
